@@ -44,7 +44,7 @@ const Sidebar: React.FC<SidebarProps> = ({
   
   return (
     <motion.aside 
-      className="menu has-background-white"
+      className="bg-white"
       style={{
         position: 'fixed',
         top: '0',
@@ -52,20 +52,19 @@ const Sidebar: React.FC<SidebarProps> = ({
         bottom: '0',
         width: isOpen ? '240px' : '80px',
         boxShadow: '1px 0 3px rgba(0,0,0,0.1)',
-        paddingTop: '1rem',
         display: 'flex',
         flexDirection: 'column',
         zIndex: 10,
-        marginTop: '3.25rem' // Navbar height
+        marginTop: '4rem' // Header height
       }}
       animate={{ width: isOpen ? 240 : 80 }}
       initial={false}
     >
-      <div style={{ flexGrow: 1, overflow: 'auto', padding: '1rem 0' }}>
-        <div className="has-text-centered mb-4">
+      <div className="flex-grow overflow-auto py-4">
+        <div className="text-center mb-4">
           {isOpen ? (
             <motion.h1
-              className="has-text-weight-bold has-text-primary"
+              className="font-bold text-primary"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
@@ -75,8 +74,8 @@ const Sidebar: React.FC<SidebarProps> = ({
             </motion.h1>
           ) : (
             <motion.div
-              className="has-background-primary has-text-white has-text-weight-bold is-flex is-align-items-center is-justify-content-center"
-              style={{ width: '40px', height: '40px', borderRadius: '6px', margin: '0 auto' }}
+              className="bg-primary text-white font-bold flex items-center justify-center mx-auto"
+              style={{ width: '40px', height: '40px', borderRadius: '6px' }}
               initial={{ scale: 0.8 }}
               animate={{ scale: 1 }}
               transition={{ duration: 0.2 }}
@@ -86,28 +85,28 @@ const Sidebar: React.FC<SidebarProps> = ({
           )}
         </div>
         
-        <ul className="menu-list">
+        <ul className="px-2">
           {navItems.map((item) => {
             const isActive = currentPath === item.path;
             const IconComponent = item.icon;
             
             return (
-              <li key={item.name}>
+              <li key={item.name} className="mb-1">
                 <a
                   onClick={() => onNavigate(item.path)}
-                  className={isActive ? 'is-active' : ''}
-                  style={{ 
-                    padding: isOpen ? '0.5rem 0.75rem' : '0.5rem', 
-                    borderRadius: '4px',
-                    display: 'flex',
-                    alignItems: 'center',
+                  className={`flex items-center rounded-md px-3 py-2 transition-colors ${
+                    isActive 
+                      ? 'bg-primary-50 text-primary' 
+                      : 'hover:bg-gray-100 text-gray-700'
+                  }`}
+                  style={{
                     justifyContent: isOpen ? 'flex-start' : 'center',
-                    transition: 'background-color 0.3s'
+                    cursor: 'pointer'
                   }}
                 >
                   <IconComponent
                     size={20}
-                    className={isActive ? 'has-text-primary' : 'has-text-grey'}
+                    className={isActive ? 'text-primary' : 'text-gray-500'}
                     style={{ marginRight: isOpen ? '0.75rem' : '0' }}
                   />
                   {isOpen && (
@@ -115,6 +114,7 @@ const Sidebar: React.FC<SidebarProps> = ({
                       initial={{ opacity: 0 }}
                       animate={{ opacity: 1 }}
                       exit={{ opacity: 0 }}
+                      className="text-sm"
                     >
                       {item.name}
                     </motion.span>
@@ -126,19 +126,20 @@ const Sidebar: React.FC<SidebarProps> = ({
         </ul>
       </div>
       
-      <div className="has-border-top pt-4 pb-4 px-2">
+      <div className="border-t p-4">
         <button
-          className="button is-white is-fullwidth is-flex is-align-items-center is-justify-content-center"
+          className="w-full flex items-center justify-center px-3 py-2 text-gray-700 hover:bg-gray-100 rounded-md transition-colors"
           style={{
             justifyContent: isOpen ? 'flex-start' : 'center'
           }}
         >
-          <LogOut size={20} className="has-text-grey mr-2" />
+          <LogOut size={20} className="text-gray-500" style={{ marginRight: isOpen ? '0.75rem' : '0' }} />
           {isOpen && (
             <motion.span 
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
+              className="text-sm"
             >
               Log out
             </motion.span>

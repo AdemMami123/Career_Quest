@@ -29,41 +29,39 @@ const Header: React.FC<HeaderProps> = ({
   const xpRequiredForNextLevel = nextLevelXp - currentLevelXp;
   
   return (
-    <header className="navbar is-white has-shadow">
-      <div className="container">
-        <div className="navbar-brand">
-          <div className="navbar-item">
+    <header className="bg-white shadow-sm">
+      <div className="container mx-auto px-4">
+        <div className="flex items-center justify-between h-16">
+          <div className="flex items-center">
             <button
               onClick={onToggleSidebar}
-              className="button is-white"
+              className="p-2 rounded-md text-gray-500 hover:bg-gray-100 focus:outline-none"
               aria-label={isSidebarOpen ? 'Close sidebar' : 'Open sidebar'}
             >
               {isSidebarOpen ? <X size={20} /> : <Menu size={20} />}
             </button>
-          </div>
             
-          <motion.div
-            className="navbar-item"
-            initial={{ opacity: 0, x: -20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.5 }}
-          >
-            <span className="has-text-weight-bold is-size-4 has-text-primary">Career Quest</span>
-          </motion.div>
-        </div>
+            <motion.div
+              className="ml-3"
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.5 }}
+            >
+              <span className="font-bold text-xl text-primary">Career Quest</span>
+            </motion.div>
+          </div>
           
-        {user && (
-          <div className="navbar-end">
-            {/* Level and XP */}
-            <div className="navbar-item is-hidden-mobile">
-              <div className="is-flex is-flex-direction-column is-align-items-flex-end mr-4">
-                <div className="is-flex is-align-items-center">
-                  <span className="is-size-7 has-text-grey mr-2">Level {user.level}</span>
-                  <span className="tag is-primary is-light">
+          {user && (
+            <div className="flex items-center">
+              {/* Level and XP */}
+              <div className="hidden md:flex flex-col items-end mr-4">
+                <div className="flex items-center">
+                  <span className="text-xs text-gray-500 mr-2">Level {user.level}</span>
+                  <span className="tag bg-primary-100 text-primary-700">
                     {xpForCurrentLevel} / {xpRequiredForNextLevel} XP
                   </span>
                 </div>
-                <div style={{ width: '160px', marginTop: '4px' }}>
+                <div className="w-40 mt-1">
                   <ProgressBar 
                     value={xpForCurrentLevel} 
                     max={xpRequiredForNextLevel} 
@@ -72,76 +70,74 @@ const Header: React.FC<HeaderProps> = ({
                   />
                 </div>
               </div>
-            </div>
 
-            {/* Notifications */}
-            <div className="navbar-item has-dropdown is-hoverable">
-              <button
-                className="button is-white"
-                onClick={() => setShowNotifications(!showNotifications)}
-              >
-                <span className="icon">
+              {/* Notifications */}
+              <div className="relative">
+                <button
+                  className="p-2 rounded-md text-gray-500 hover:bg-gray-100 focus:outline-none"
+                  onClick={() => setShowNotifications(!showNotifications)}
+                >
                   <Bell size={20} />
-                </span>
-                {notifications.length > 0 && (
-                  <span className="tag is-danger is-rounded is-small" style={{ position: 'absolute', top: '0', right: '0' }}>&nbsp;</span>
-                )}
-              </button>
+                  {notifications.length > 0 && (
+                    <span className="absolute top-0 right-0 block w-2 h-2 rounded-full bg-red-500"></span>
+                  )}
+                </button>
 
-              {/* Notifications dropdown */}
-              <div className="navbar-dropdown is-right">
-                <div className="navbar-item">
-                  <p className="has-text-weight-medium">Notifications</p>
-                </div>
-                <hr className="navbar-divider" />
-                {notifications.length === 0 ? (
-                  <div className="navbar-item">
-                    <span className="has-text-grey">No new notifications</span>
-                  </div>
-                ) : (
-                  notifications.map((notification) => (
-                    <a
-                      key={notification.id}
-                      href="#"
-                      className="navbar-item"
-                    >
-                      {notification.message}
-                    </a>
-                  ))
-                )}
-                <hr className="navbar-divider" />
-                <div className="navbar-item">
-                  <a href="#" className="is-size-7 has-text-centered has-text-grey has-text-weight-medium">View all notifications</a>
-                </div>
-              </div>
-            </div>
-              
-            {/* User Avatar */}
-            <div className="navbar-item">
-              <div className="is-flex is-align-items-center">
-                <div className="is-flex-shrink-0">
-                  <div className="image is-32x32">
-                    <div className="is-rounded has-background-primary is-flex is-align-items-center is-justify-content-center has-text-white" style={{ width: '32px', height: '32px', borderRadius: '50%', overflow: 'hidden' }}>
-                      {user.avatarUrl ? (
-                        <img src={user.avatarUrl} alt={user.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-                      ) : (
-                        <span className="is-size-6 has-text-weight-medium">{user.name.charAt(0)}</span>
-                      )}
+                {/* Notifications dropdown */}
+                {showNotifications && (
+                  <div className="absolute right-0 mt-2 w-80 bg-white rounded-md shadow-lg z-50">
+                    <div className="p-3 border-b">
+                      <p className="font-medium">Notifications</p>
                     </div>
+                    
+                    {notifications.length === 0 ? (
+                      <div className="p-4">
+                        <span className="text-gray-500">No new notifications</span>
+                      </div>
+                    ) : (
+                      <div>
+                        {notifications.map((notification) => (
+                          <a
+                            key={notification.id}
+                            href="#"
+                            className="block px-4 py-3 hover:bg-gray-50 border-b"
+                          >
+                            {notification.message}
+                          </a>
+                        ))}
+                      </div>
+                    )}
+                    
+                    <div className="p-3 text-center">
+                      <a href="#" className="text-xs font-medium text-gray-500">View all notifications</a>
+                    </div>
+                  </div>
+                )}
+              </div>
+              
+              {/* User Avatar */}
+              <div className="ml-4 flex items-center">
+                <div className="flex-shrink-0">
+                  <div className="w-8 h-8 rounded-full bg-primary flex items-center justify-center text-white overflow-hidden">
+                    {user.avatarUrl ? (
+                      <img src={user.avatarUrl} alt={user.name} className="w-full h-full object-cover" />
+                    ) : (
+                      <span className="text-sm font-medium">{user.name.charAt(0)}</span>
+                    )}
                   </div>
                 </div>
                 <div className="ml-3">
-                  <div className="is-size-7 has-text-weight-medium">
+                  <div className="text-xs font-medium">
                     {user.name}
                   </div>
-                  <div className="is-size-7 has-text-grey">
+                  <div className="text-xs text-gray-500">
                     {user.role === 'candidate' ? 'Candidate' : 'HR Manager'}
                   </div>
                 </div>
               </div>
             </div>
-          </div>
-        )}
+          )}
+        </div>
       </div>
     </header>
   );

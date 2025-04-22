@@ -27,40 +27,44 @@ const ProgressBar = ({
   const percentage = max > 0 ? Math.round((value / max) * 100) : 0;
   
   const sizeClasses = {
-    sm: 'is-small',
-    md: '',
-    lg: 'is-medium',
+    sm: 'h-1.5',
+    md: 'h-2.5',
+    lg: 'h-3.5',
   };
   
   const colorClasses = {
-    primary: 'is-primary',
-    secondary: 'is-info',
-    accent: 'is-warning',
+    primary: 'bg-primary',
+    secondary: 'bg-secondary',
+    accent: 'bg-amber-500',
   };
   
-  const colorClass = colorClasses[color as keyof typeof colorClasses] || 'is-primary';
+  const barColor = colorClasses[color as keyof typeof colorClasses] || 'bg-primary';
   
   return (
-    <div className={cn('', className)}>
+    <div className={cn('w-full', className)}>
       {(showLabel || label) && (
-        <div className="is-flex is-justify-content-space-between mb-1">
-          <span className="is-size-7">{label || 'Progress'}</span>
-          <span className="is-size-7">{percentage}%</span>
+        <div className="flex justify-between items-center mb-1">
+          <span className="text-xs text-gray-500">{label || 'Progress'}</span>
+          <span className="text-xs font-medium text-gray-700">{percentage}%</span>
         </div>
       )}
-      <div className={`progress ${colorClass} ${sizeClasses[size]}`} value={percentage} max="100">
+      <div 
+        className={cn(
+          'w-full overflow-hidden rounded-full bg-gray-200',
+          sizeClasses[size]
+        )}
+      >
         {animate ? (
           <motion.div 
-            className="progress-bar"
+            className={cn('h-full rounded-full', barColor)}
             initial={{ width: 0 }}
             animate={{ width: `${percentage}%` }}
             transition={{ duration: 0.5, ease: 'easeOut' }}
-            style={{ height: '100%', backgroundColor: 'currentColor' }}
           />
         ) : (
           <div 
-            className="progress-bar" 
-            style={{ width: `${percentage}%`, height: '100%', backgroundColor: 'currentColor' }} 
+            className={cn('h-full rounded-full', barColor)}
+            style={{ width: `${percentage}%` }}
           />
         )}
       </div>

@@ -33,34 +33,51 @@ const MissionCard: React.FC<MissionCardProps> = ({ mission, onSelect }) => {
   const getStatusInfo = (status: string) => {
     switch (status) {
       case 'not-started':
-        return { label: 'Not Started', class: 'is-light' };
+        return { label: 'Not Started', class: 'bg-gray-100 text-gray-700' };
       case 'in-progress':
-        return { label: 'In Progress', class: 'is-info' };
+        return { label: 'In Progress', class: 'bg-blue-100 text-blue-700' };
       case 'completed':
-        return { label: 'Completed', class: 'is-success' };
+        return { label: 'Completed', class: 'bg-green-100 text-green-700' };
       case 'failed':
-        return { label: 'Failed', class: 'is-danger' };
+        return { label: 'Failed', class: 'bg-red-100 text-red-700' };
       default:
-        return { label: 'Unknown', class: 'is-light' };
+        return { label: 'Unknown', class: 'bg-gray-100 text-gray-700' };
     }
   };
 
   const getDifficultyTag = (difficulty: string) => {
     switch (difficulty) {
       case 'easy':
-        return 'is-success';
+        return 'bg-green-100 text-green-700';
       case 'medium':
-        return 'is-warning';
+        return 'bg-amber-100 text-amber-700';
       case 'hard':
-        return 'is-danger is-light';
+        return 'bg-orange-100 text-orange-700';
       case 'expert':
-        return 'is-danger';
+        return 'bg-red-100 text-red-700';
       default:
-        return 'is-light';
+        return 'bg-gray-100 text-gray-700';
+    }
+  };
+
+  // Get difficulty color for the top border
+  const getDifficultyBorderColor = (difficulty: string) => {
+    switch (difficulty) {
+      case 'easy':
+        return 'bg-green-500';
+      case 'medium':
+        return 'bg-amber-500';
+      case 'hard':
+        return 'bg-orange-500';
+      case 'expert':
+        return 'bg-red-500';
+      default:
+        return 'bg-gray-300';
     }
   };
 
   const statusInfo = getStatusInfo(mission.status);
+  const difficultyBorder = getDifficultyBorderColor(mission.difficulty);
 
   return (
     <motion.div 
@@ -74,62 +91,53 @@ const MissionCard: React.FC<MissionCardProps> = ({ mission, onSelect }) => {
       transition={{ duration: 0.3 }}
     >
       <div 
-        className={`has-background-${mission.difficulty === 'easy' ? 'success' : 
-                                     mission.difficulty === 'medium' ? 'warning' : 
-                                     mission.difficulty === 'hard' ? 'danger is-light' : 
-                                     'danger'}`}
-        style={{ height: '8px', width: '100%' }}
+        className={`${difficultyBorder} w-full h-2`}
         role="presentation"
         aria-hidden="true"
       />
-      <div className="card-content">
-        <div className="is-flex is-justify-content-space-between is-align-items-start mb-3">
-          <div className="is-flex is-align-items-center">
+      <div className="p-6">
+        <div className="flex justify-between items-start mb-3">
+          <div className="flex items-center">
             <span className={`tag ${statusInfo.class} mr-1`}>
               {statusInfo.label}
             </span>
-            <span className="tag is-primary is-light">
+            <span className="tag bg-primary-100 text-primary-700">
               {mission.points} XP
             </span>
           </div>
           {mission.timeLimit && (
-            <div className="is-flex is-align-items-center">
+            <div className="flex items-center">
               <Clock size={14} className="mr-1" />
-              <span className="is-size-7 has-text-grey">{Math.floor(mission.timeLimit / 60)} min</span>
+              <span className="text-xs text-gray-500">{Math.floor(mission.timeLimit / 60)} min</span>
             </div>
           )}
         </div>
         
-        <h3 className="title is-5 mb-2">{mission.title}</h3>
+        <h3 className="text-lg font-bold mb-2">{mission.title}</h3>
         
-        <div className="is-flex is-align-items-center mb-3">
-          <div className="is-flex is-align-items-center mr-2">
-            {getCategoryIconComponent(mission.category)}
-            <span className="ml-1 is-capitalized is-size-7">{mission.category}</span>
+        <div className="flex items-center mb-3">
+          <div className="flex items-center mr-2">
+            <span className="mr-1">{getCategoryIconComponent(mission.category)}</span>
+            <span className="text-xs capitalize">{mission.category}</span>
           </div>
-          <span className={`tag ${getDifficultyTag(mission.difficulty)} is-capitalized`}>
+          <span className={`tag ${getDifficultyTag(mission.difficulty)} capitalize`}>
             {mission.difficulty}
           </span>
         </div>
         
-        <p className="is-size-7 has-text-grey mb-4" style={{
-          display: '-webkit-box',
-          '-webkit-line-clamp': '2',
-          '-webkit-box-orient': 'vertical',
-          overflow: 'hidden'
-        }}>
+        <p className="text-xs text-gray-500 mb-4 line-clamp-2">
           {mission.description}
         </p>
         
         {mission.badgeReward && (
-          <div className="is-size-7 has-text-grey mb-3 is-flex is-align-items-center">
+          <div className="text-xs text-gray-500 mb-3 flex items-center">
             <span className="mr-2">Reward:</span>
-            <span className="has-text-weight-medium has-text-primary">{mission.badgeReward.name} Badge</span>
+            <span className="font-medium text-primary">{mission.badgeReward.name} Badge</span>
           </div>
         )}
         
-        <div className="is-flex is-align-items-center is-justify-content-space-between pt-2 mt-2" style={{ borderTop: '1px solid #f0f0f0' }}>
-          <div className="is-size-7 has-text-grey">
+        <div className="flex items-center justify-between pt-2 mt-2 border-t border-gray-200">
+          <div className="text-xs text-gray-500">
             {mission.tasks.length} tasks
           </div>
           <Button

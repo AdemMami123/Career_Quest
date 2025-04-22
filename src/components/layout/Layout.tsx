@@ -23,14 +23,14 @@ const Layout: React.FC<LayoutProps> = ({
   };
 
   return (
-    <div className="has-background-light" style={{ minHeight: '100vh' }}>
+    <div className="bg-gray-50 min-h-screen">
       <Header 
         user={user} 
         onToggleSidebar={toggleSidebar} 
         isSidebarOpen={isSidebarOpen} 
       />
       
-      <div className="is-flex" style={{ overflow: 'hidden' }}>
+      <div className="flex overflow-hidden">
         <Sidebar 
           isOpen={isSidebarOpen} 
           user={user} 
@@ -39,7 +39,7 @@ const Layout: React.FC<LayoutProps> = ({
         />
         
         <main 
-          className="section" 
+          className="p-6"
           style={{
             transition: 'margin-left 0.3s ease-in-out',
             marginLeft: isSidebarOpen ? '240px' : '80px',
@@ -47,7 +47,7 @@ const Layout: React.FC<LayoutProps> = ({
             overflow: 'auto'
           }}
         >
-          <div className="container">
+          <div className="max-w-7xl mx-auto">
             {children}
           </div>
         </main>

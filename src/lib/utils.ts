@@ -1,9 +1,9 @@
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
 
-// We'll keep this for backward compatibility and to ensure existing components work
+// Updated to properly merge Tailwind classes
 export function cn(...inputs: ClassValue[]) {
-  return inputs.join(' ');
+  return twMerge(clsx(inputs));
 }
 
 // Format a number with commas
@@ -18,37 +18,37 @@ export function formatTime(seconds: number): string {
   return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
 }
 
-// Get color based on difficulty - return Bulma classes
+// Get color based on difficulty - return Tailwind classes
 export function getDifficultyColor(difficulty: string): string {
   switch (difficulty.toLowerCase()) {
     case 'easy':
-      return 'has-background-success';
+      return 'bg-green-500 text-white';
     case 'medium':
-      return 'has-background-warning';
+      return 'bg-amber-500 text-white';
     case 'hard':
-      return 'has-background-danger has-background-light';
+      return 'bg-orange-500 text-white';
     case 'expert':
-      return 'has-background-danger';
+      return 'bg-red-500 text-white';
     default:
-      return 'has-background-grey-light';
+      return 'bg-gray-300 text-gray-700';
   }
 }
 
-// Get color based on rarity - return Bulma classes
+// Get color based on rarity - return Tailwind classes
 export function getRarityColor(rarity: string): string {
   switch (rarity.toLowerCase()) {
     case 'common':
-      return 'has-background-grey-light';
+      return 'bg-gray-200 text-gray-700';
     case 'uncommon':
-      return 'has-background-success';
+      return 'bg-green-500 text-white';
     case 'rare':
-      return 'has-background-info';
+      return 'bg-blue-500 text-white';
     case 'epic':
-      return 'has-background-purple';
+      return 'bg-purple-500 text-white';
     case 'legendary':
-      return 'has-background-warning';
+      return 'bg-amber-500 text-white';
     default:
-      return 'has-background-grey-light';
+      return 'bg-gray-200 text-gray-700';
   }
 }
 

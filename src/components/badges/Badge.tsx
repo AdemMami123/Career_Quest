@@ -23,17 +23,17 @@ const BadgeComponent: React.FC<BadgeProps> = ({
   const getRarityColorClass = (rarity: string) => {
     switch (rarity.toLowerCase()) {
       case 'common':
-        return 'has-background-light';
+        return 'bg-gray-200 text-gray-700';
       case 'uncommon':
-        return 'has-background-success';
+        return 'bg-green-500 text-white';
       case 'rare':
-        return 'has-background-info';
+        return 'bg-blue-500 text-white';
       case 'epic':
-        return 'has-background-purple';
+        return 'bg-purple-500 text-white';
       case 'legendary':
-        return 'has-background-warning';
+        return 'bg-amber-500 text-white';
       default:
-        return 'has-background-light';
+        return 'bg-gray-200 text-gray-700';
     }
   };
   
@@ -71,7 +71,7 @@ const BadgeComponent: React.FC<BadgeProps> = ({
 
   return (
     <motion.div
-      className="is-flex is-flex-direction-column is-align-items-center"
+      className="flex flex-col items-center"
       style={{ cursor: onClick ? 'pointer' : 'default' }}
       onClick={handleClick}
       whileHover={onClick ? { scale: 1.05 } : {}}
@@ -84,15 +84,12 @@ const BadgeComponent: React.FC<BadgeProps> = ({
         delay: 0.2
       } : {}}
     >
-      <div className="is-relative">
+      <div className="relative">
         {/* Badge Icon Container */}
         <div 
-          className={`is-flex is-align-items-center is-justify-content-center ${rarityClass} has-text-white`}
+          className={`flex items-center justify-center ${rarityClass} rounded-full overflow-hidden relative`}
           style={{ 
-            ...sizeClasses[size], 
-            borderRadius: '50%',
-            position: 'relative',
-            overflow: 'hidden'
+            ...sizeClasses[size]
           }}
         >
           {getCategoryIconComponent(badge.category)}
@@ -101,16 +98,7 @@ const BadgeComponent: React.FC<BadgeProps> = ({
         {/* "New" indicator */}
         {isNew && (
           <motion.div 
-            className="has-background-danger has-text-white is-flex is-align-items-center is-justify-content-center"
-            style={{
-              position: 'absolute',
-              top: '-5px',
-              right: '-5px',
-              width: '20px',
-              height: '20px',
-              borderRadius: '50%',
-              fontSize: '0.75rem'
-            }}
+            className="bg-red-500 text-white flex items-center justify-center text-xs absolute -top-1 -right-1 w-5 h-5 rounded-full"
             initial={{ scale: 0 }}
             animate={{ scale: 1 }}
             transition={{ delay: 0.5 }}
@@ -122,35 +110,28 @@ const BadgeComponent: React.FC<BadgeProps> = ({
         {/* Legendary shine effect */}
         {badge.rarity === 'legendary' && (
           <div 
-            style={{
-              position: 'absolute',
-              inset: 0,
-              borderRadius: '50%',
-              background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent)',
-              backgroundSize: '200% 100%',
-              animation: 'badgeShine 2s linear infinite'
-            }}
+            className="absolute inset-0 rounded-full bg-gradient-to-r from-transparent via-white/30 to-transparent bg-[length:200%_100%] animate-badge-shine"
           />
         )}
       </div>
       
       {showDetails && (
         <motion.div 
-          className="has-text-centered mt-2"
+          className="text-center mt-2"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.3 }}
         >
-          <h4 className="has-text-weight-medium is-size-6">{badge.name}</h4>
+          <h4 className="font-medium text-sm">{badge.name}</h4>
           {size === 'lg' && (
-            <p className="is-size-7 has-text-grey mt-1" style={{ maxWidth: '200px' }}>{badge.description}</p>
+            <p className="text-xs text-gray-500 mt-1 max-w-[200px]">{badge.description}</p>
           )}
-          <span className={`tag is-rounded mt-1 is-capitalized 
-            ${badge.rarity === 'common' ? 'is-light' : 
-              badge.rarity === 'uncommon' ? 'is-success is-light' : 
-              badge.rarity === 'rare' ? 'is-info is-light' : 
-              badge.rarity === 'epic' ? 'is-purple is-light' : 
-              'is-warning is-light'}`}
+          <span className={`tag mt-1 capitalize ${
+            badge.rarity === 'common' ? 'bg-gray-100 text-gray-700' : 
+            badge.rarity === 'uncommon' ? 'bg-green-100 text-green-800' : 
+            badge.rarity === 'rare' ? 'bg-blue-100 text-blue-800' : 
+            badge.rarity === 'epic' ? 'bg-purple-100 text-purple-800' : 
+            'bg-amber-100 text-amber-800'}`}
           >
             {badge.rarity}
           </span>
