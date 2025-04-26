@@ -10,6 +10,7 @@ import {
   Users,
   LogOut
 } from 'lucide-react';
+import { useAuth } from '../../context/AuthContext';
 
 interface SidebarProps {
   isOpen: boolean;
@@ -24,6 +25,8 @@ const Sidebar: React.FC<SidebarProps> = ({
   onNavigate,
   currentPath
 }) => {
+  const { signOut } = useAuth();
+  
   // Different navigation items based on user role
   const candidateNavItems = [
     { name: 'Dashboard', path: '/dashboard', icon: Home },
@@ -41,6 +44,10 @@ const Sidebar: React.FC<SidebarProps> = ({
   ];
   
   const navItems = user?.role === 'hr' ? hrNavItems : candidateNavItems;
+  
+  const handleLogout = async () => {
+    await signOut();
+  };
   
   return (
     <motion.aside 
@@ -128,6 +135,7 @@ const Sidebar: React.FC<SidebarProps> = ({
       
       <div className="border-t p-4">
         <button
+          onClick={handleLogout}
           className="w-full flex items-center justify-center px-3 py-2 text-gray-700 hover:bg-gray-100 rounded-md transition-colors"
           style={{
             justifyContent: isOpen ? 'flex-start' : 'center'

@@ -1,14 +1,16 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import * as Progress from '@radix-ui/react-progress';
 import { cn } from '../../lib/utils';
 
 interface ProgressBarProps {
-  value: number;
-  max: number;
+  // Allow either value/max pattern or direct progress percentage
+  value?: number;
+  max?: number;
+  progress?: number; // Added for backward compatibility
   showLabel?: boolean;
   size?: 'sm' | 'md' | 'lg';
   color?: 'primary' | 'secondary' | 'accent' | string;
+  colorClass?: string; // Allow direct color class injection
   label?: string;
   className?: string;
   animate?: boolean;
@@ -16,15 +18,20 @@ interface ProgressBarProps {
 
 const ProgressBar = ({
   value,
-  max,
+  max = 100,
+  progress,
   showLabel = false,
   size = 'md',
   color = 'primary',
+  colorClass,
   label,
   className,
   animate = true,
 }: ProgressBarProps) => {
-  const percentage = max > 0 ? Math.round((value / max) * 100) : 0;
+  // Calculate percentage either from progress or value/max
+  const percentage = progress !== undefined 
+    ? progress 
+    : (max > 0 ? Math.round((value || 0) / max * 100) : 0);
   
   const sizeClasses = {
     sm: 'h-1.5',
@@ -38,7 +45,8 @@ const ProgressBar = ({
     accent: 'bg-amber-500',
   };
   
-  const barColor = colorClasses[color as keyof typeof colorClasses] || 'bg-primary';
+  // Use provided colorClass if available, otherwise use color mapping
+  const barColor = colorClass || (colorClasses[color as keyof typeof colorClasses] || 'bg-primary');
   
   return (
     <div className={cn('w-full', className)}>

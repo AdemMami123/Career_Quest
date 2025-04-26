@@ -3,7 +3,8 @@ import { motion } from 'framer-motion';
 import { User } from '../../types';
 import { ProgressBar } from '../ui/ProgressBar';
 import { getLevelRequirement } from '../../lib/mock-data';
-import { Bell, Menu, X } from 'lucide-react';
+import { Bell, Menu, X, LogOut, Settings, User as UserIcon } from 'lucide-react';
+import { useAuth } from '../../context/AuthContext';
 
 interface HeaderProps {
   user?: User;
@@ -16,17 +17,38 @@ const Header: React.FC<HeaderProps> = ({
   onToggleSidebar,
   isSidebarOpen
 }) => {
+  const { signOut } = useAuth();
   const [notifications] = useState<{ id: string; message: string }[]>([
     { id: 'notif1', message: 'New mission available: Customer Service Simulation' },
     { id: 'notif2', message: 'Team Captain badge earned!' },
   ]);
   const [showNotifications, setShowNotifications] = useState(false);
+  const [showUserMenu, setShowUserMenu] = useState(false);
 
   // Calculate XP progress to next level
   const currentLevelXp = user ? getLevelRequirement(user.level) : 0;
   const nextLevelXp = user ? getLevelRequirement(user.level + 1) : 100;
   const xpForCurrentLevel = user ? user.experience - currentLevelXp : 0;
   const xpRequiredForNextLevel = nextLevelXp - currentLevelXp;
+  
+  const handleLogout = async () => {
+    await signOut();
+    // The AuthContext's onAuthStateChange listener will handle the redirect
+  };
+
+  const handleClickOutside = () => {
+    setShowUserMenu(false);
+    setShowNotifications(false);
+  };
+
+  React.useEffect(() => {
+    if (showUserMenu || showNotifications) {
+      document.addEventListener('click', handleClickOutside);
+    }
+    return () => {
+      document.removeEventListener('click', handleClickOutside);
+    };
+  }, [showUserMenu, showNotifications]);
   
   return (
     <header className="bg-white shadow-sm">
@@ -75,7 +97,11 @@ const Header: React.FC<HeaderProps> = ({
               <div className="relative">
                 <button
                   className="p-2 rounded-md text-gray-500 hover:bg-gray-100 focus:outline-none"
-                  onClick={() => setShowNotifications(!showNotifications)}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setShowNotifications(!showNotifications);
+                    setShowUserMenu(false);
+                  }}
                 >
                   <Bell size={20} />
                   {notifications.length > 0 && (
@@ -115,25 +141,63 @@ const Header: React.FC<HeaderProps> = ({
                 )}
               </div>
               
-              {/* User Avatar */}
-              <div className="ml-4 flex items-center">
-                <div className="flex-shrink-0">
-                  <div className="w-8 h-8 rounded-full bg-primary flex items-center justify-center text-white overflow-hidden">
-                    {user.avatarUrl ? (
-                      <img src={user.avatarUrl} alt={user.name} className="w-full h-full object-cover" />
-                    ) : (
-                      <span className="text-sm font-medium">{user.name.charAt(0)}</span>
-                    )}
+              {/* User Avatar & Menu */}
+              <div className="ml-4 flex items-center relative">
+                <button 
+                  className="flex items-center focus:outline-none"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setShowUserMenu(!showUserMenu);
+                    setShowNotifications(false);
+                  }}
+                >
+                  <div className="flex-shrink-0">
+                    <div className="w-8 h-8 rounded-full bg-primary flex items-center justify-center text-white overflow-hidden">
+                      {user.avatarUrl ? (
+                        <img src={user.avatarUrl} alt={user.name} className="w-full h-full object-cover" />
+                      ) : (
+                        <span className="text-sm font-medium">{user.name.charAt(0)}</span>
+                      )}
+                    </div>
                   </div>
-                </div>
-                <div className="ml-3">
-                  <div className="text-xs font-medium">
-                    {user.name}
+                  <div className="ml-3">
+                    <div className="text-xs font-medium">
+                      {user.name}
+                    </div>
+                    <div className="text-xs text-gray-500">
+                      {user.role === 'candidate' ? 'Candidate' : 'HR Manager'}
+                    </div>
                   </div>
-                  <div className="text-xs text-gray-500">
-                    {user.role === 'candidate' ? 'Candidate' : 'HR Manager'}
+                </button>
+
+                {/* User dropdown menu */}
+                {showUserMenu && (
+                  <div className="absolute right-0 top-full mt-2 w-48 bg-white rounded-md shadow-lg z-50">
+                    <div className="py-1">
+                      <a 
+                        href="#" 
+                        className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                      >
+                        <UserIcon size={16} className="mr-3" />
+                        Profile
+                      </a>
+                      <a 
+                        href="#" 
+                        className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                      >
+                        <Settings size={16} className="mr-3" />
+                        Settings
+                      </a>
+                      <button 
+                        onClick={handleLogout} 
+                        className="flex w-full items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                      >
+                        <LogOut size={16} className="mr-3" />
+                        Sign out
+                      </button>
+                    </div>
                   </div>
-                </div>
+                )}
               </div>
             </div>
           )}

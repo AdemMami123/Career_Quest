@@ -1,48 +1,41 @@
-import React, { ButtonHTMLAttributes, forwardRef } from 'react';
-import { Slot } from '@radix-ui/react-slot'; // Needed for `asChild`
-import { VariantProps, cva } from 'class-variance-authority';
-import { cn } from '../../lib/utils';
+import React from 'react';
+import { cva, type VariantProps } from "class-variance-authority";
 
-// Tailwind variants
-export const buttonVariants = cva(
-  'inline-flex items-center justify-center rounded-md font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none',
+const buttonVariants = cva(
+  "inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold focus-visible:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none",
   {
     variants: {
       variant: {
-        default: 'bg-primary text-white hover:bg-primary-700 focus-visible:ring-primary-300',
-        destructive: 'bg-red-500 text-white hover:bg-red-600 focus-visible:ring-red-300',
-        outline: 'border border-gray-300 bg-white text-gray-700 hover:bg-gray-50 focus-visible:ring-gray-400',
-        secondary: 'bg-secondary text-white hover:bg-secondary-600 focus-visible:ring-secondary-300',
-        ghost: 'hover:bg-gray-100 hover:text-gray-900 text-gray-600',
-        link: 'underline-offset-4 text-primary hover:underline',
+        default: "bg-gold text-white hover:bg-gold-dark",
+        destructive: "bg-burgundy text-white hover:bg-burgundy-dark",
+        outline: "border border-gray-300 bg-transparent hover:bg-gray-50 text-charcoal",
+        secondary: "bg-navy text-white hover:bg-navy-dark",
+        ghost: "bg-transparent hover:bg-gray-100 text-charcoal",
+        link: "bg-transparent underline-offset-4 hover:underline text-gold hover:text-gold-dark",
       },
       size: {
-        default: 'h-10 px-4 py-2',
-        sm: 'h-8 text-sm px-3 py-1',
-        lg: 'h-12 text-lg px-5 py-2',
-        icon: 'h-9 w-9 p-1',
+        default: "h-10 py-2 px-4",
+        sm: "h-9 px-3 rounded-md",
+        lg: "h-11 px-8 rounded-md",
+        icon: "h-10 w-10",
       },
     },
     defaultVariants: {
-      variant: 'default',
-      size: 'default',
+      variant: "default",
+      size: "default",
     },
   }
 );
 
 export interface ButtonProps
-  extends ButtonHTMLAttributes<HTMLButtonElement>,
-    VariantProps<typeof buttonVariants> {
-  asChild?: boolean;
-}
+  extends React.ButtonHTMLAttributes<HTMLButtonElement>,
+    VariantProps<typeof buttonVariants> {}
 
-// The actual Button component
-const Button = forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ className, variant, size, asChild = false, ...props }, ref) => {
-    const Comp = asChild ? Slot : 'button';
+export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
+  ({ className, variant, size, ...props }, ref) => {
     return (
-      <Comp
-        className={cn(buttonVariants({ variant, size }), className)}
+      <button
+        className={buttonVariants({ variant, size, className })}
         ref={ref}
         {...props}
       />
@@ -50,6 +43,4 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
   }
 );
 
-Button.displayName = 'Button';
-
-export { Button };
+Button.displayName = "Button";

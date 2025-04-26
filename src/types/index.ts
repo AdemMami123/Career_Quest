@@ -15,7 +15,9 @@ export interface Mission {
   tasks: MissionTask[];
   requiredSkills: Skill[];
   completionCriteria: string;
-  badgeReward?: Badge;
+  badgeReward?: Badge | null;
+  created_at?: string | Date;
+  created_by?: string;
 }
 
 export interface MissionTask {
